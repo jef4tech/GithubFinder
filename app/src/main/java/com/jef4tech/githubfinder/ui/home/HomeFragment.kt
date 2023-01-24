@@ -1,10 +1,10 @@
 package com.jef4tech.githubfinder.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,13 +26,14 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
+            ViewModelProvider(this)[HomeViewModel::class.java]
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
-        homeViewModel.text.observe(viewLifecycleOwner) {
-
+        homeViewModel.getUserList()
+        homeViewModel.userList.observe(viewLifecycleOwner) {
+            userAdapter.setData(it.items)
+            Log.i("important", "onCreateView: $it")
         }
         setupUI()
         setupRecyclerView()

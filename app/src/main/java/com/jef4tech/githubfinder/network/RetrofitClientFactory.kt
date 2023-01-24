@@ -16,11 +16,11 @@ import java.util.concurrent.TimeUnit
  * @author jeffin
  * @date 23/01/23
  */
-class RestApiImpl {
+object RetrofitClientFactory {
 
     val BASE_URL = "https://api.github.com/"
     val API_KEY = "Bearer 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"
-    val HEADER_HOST = "api-football-v1.p.rapidapi.com"
+
 
 
     val retrofitClient: Retrofit.Builder by lazy {
