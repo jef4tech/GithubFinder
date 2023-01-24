@@ -21,9 +21,9 @@ class HomeViewModel : ViewModel() {
     val errorMessage = MutableLiveData<String>()
     val userList = MutableLiveData<UserResponse>()
 
-    fun getUserList() {
+    fun getUserList(searchWord: String) {
         viewModelScope.launch {
-            val response = RestApiImpl.getUserList()
+            val response = RestApiImpl.getUserList(searchWord)
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     userList.postValue(response.body())

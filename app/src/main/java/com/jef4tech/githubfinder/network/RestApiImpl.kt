@@ -5,5 +5,6 @@ package com.jef4tech.githubfinder.network
  * @date 24/01/23
  */
 object RestApiImpl {
-    suspend fun getUserList() = RetrofitClientFactory.restApis.searchUser("jeffin johny")
+    suspend fun getUserList(searchWord: String) = RetrofitClientFactory.restApis.searchUser(searchWord)
+    suspend fun getUserData(userName: String) = RetrofitClientFactory.restApis.getUserData(userName)
 }

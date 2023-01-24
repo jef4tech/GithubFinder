@@ -5,12 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.jef4tech.githubfinder.databinding.AdapterUsersBinding
 import com.jef4tech.githubfinder.models.UserResponse
+import com.jef4tech.githubfinder.utils.Extensions
 
 /**
  * @author jeffin
  * @date 23/01/23
  */
-class UserAdapter(private val listener: (position: Int) -> Unit): RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
+class UserAdapter(private val listener: (user: UserResponse.Item) -> Unit): RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 //    private var userList:List<UserResponse> = ArrayList()
     private var listData = ArrayList<UserResponse.Item>()
     inner class UserViewHolder(val custombind:AdapterUsersBinding):RecyclerView.ViewHolder(custombind.root)
@@ -24,14 +25,18 @@ class UserAdapter(private val listener: (position: Int) -> Unit): RecyclerView.A
         val user = listData[position]
         holder.custombind.apply {
             tvName.text = user.login
+            layout1.setOnClickListener{
+                listener.invoke(user)
+            }
         }
+        Extensions.loadImagefromUrl(holder.custombind.ivUser.context,holder.custombind.ivUser,user.avatarUrl)
     }
 
     override fun getItemCount(): Int {
         return listData.size
     }
 
-    fun setData(newListData: List<UserResponse.Item>?){
+    fun setData(newListData: List<UserResponse.Item>){
         if (newListData == null) return
         listData.clear()
         listData.addAll(newListData)
