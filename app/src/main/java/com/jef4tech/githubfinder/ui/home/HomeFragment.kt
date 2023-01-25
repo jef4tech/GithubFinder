@@ -56,7 +56,7 @@ class HomeFragment : Fragment() {
 
         })
 
-        setupUI()
+
         setupRecyclerView()
         return root
     }
@@ -81,9 +81,6 @@ class HomeFragment : Fragment() {
         view?.let { Navigation.findNavController(it).navigate(R.id.action_navigation_home_to_navigation_dashboard,bundle) }
     }
 
-    private fun setupUI() {
-//        TODO("Not yet implemented")
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()

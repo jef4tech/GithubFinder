@@ -24,8 +24,8 @@
 
     <ImageView
         android:id="@+id/iv_user"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/_100sdp"
+        android:layout_height="@dimen/_100sdp"
         android:src="@drawable/ic_launcher_background"
         android:layout_marginStart="@dimen/_10sdp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -38,12 +38,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_30sdp"
-        android:textColor="@color/black"
         android:text="UserName"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="@color/black"
         app:layout_constraintStart_toEndOf="@+id/iv_user"
         app:layout_constraintTop_toBottomOf="@+id/tv_head"
-        app:layout_constraintVertical_bias="0.01999998" />
+        />
 
     <TextView
         android:id="@+id/tv_email"
@@ -51,7 +50,6 @@
         android:layout_height="wrap_content"
         android:text="Email"
         android:textColor="@color/black"
-        android:layout_marginTop="@dimen/_5sdp"
         app:layout_constraintStart_toStartOf="@+id/tv_userName"
         app:layout_constraintTop_toBottomOf="@+id/tv_userName" />
 
@@ -101,6 +99,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_10sdp"
         android:text="Biography"
+        android:ellipsize="end"
+        android:maxLines="4"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -118,12 +118,12 @@
         android:queryHint="Search for Users"
         android:background="@drawable/rounded_rectangle"
         android:textColor="@color/black"
-        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_5sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_biography" />
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/userRecyclerView"
+        android:id="@+id/repoRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/_10sdp"

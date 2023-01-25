@@ -1,8 +1,8 @@
 package com.jef4tech.githubfinder.network
 
+import com.jef4tech.githubfinder.models.RepositoryResponse
 import com.jef4tech.githubfinder.models.UserData
 import com.jef4tech.githubfinder.models.UserResponse
-import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -21,4 +21,9 @@ interface RestApis {
 
     @GET("users/{userid}")
     suspend fun getUserData(@Path("userid") id: String): Response<UserData>
+
+    @GET("users/{userid}/repos")
+    suspend fun getUserRepos(@Path("userid") id: String): Response<RepositoryResponse>
+
+
 }
