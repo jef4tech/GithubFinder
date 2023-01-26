@@ -7,6 +7,10 @@ import android.widget.ImageView
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import org.joda.time.LocalDateTime
+import org.joda.time.format.DateTimeFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * @author jeffin
@@ -27,6 +31,13 @@ object Extensions {
     fun showToast(message: String,context: Context) {
         val toast = Toast.makeText(context, message, Toast.LENGTH_SHORT)
         toast.show()
+    }
+
+    const val DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ"
+
+    fun getDayWithMonthName(input: String): String {
+        val localDateTime = LocalDateTime.parse(input, DateTimeFormat.forPattern(DATE_FORMAT))
+        return SimpleDateFormat("dd MMM''yy").format(localDateTime.toDate().time)
     }
 
 }

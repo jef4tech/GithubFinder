@@ -48,7 +48,7 @@ class DashboardFragment : Fragment() {
                 tvUserName.text = it.login
                 tvEmail.text = it.email
                 tvLocation.text = it.location
-                tvJoinDate.text = it.createdAt
+                tvJoinDate.text = Extensions.getDayWithMonthName(it.createdAt)
                 tvFollowers.text = it.followers.toString()+" Followers"
                 tvFollowing.text = "Following "+it.following.toString()
                 tvBiography.text = it.bio

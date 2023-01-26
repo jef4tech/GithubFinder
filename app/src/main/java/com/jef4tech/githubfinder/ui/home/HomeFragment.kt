@@ -92,10 +92,9 @@ class HomeFragment : Fragment() {
 
                 if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                     && firstVisibleItemPosition >= 0) {
-                    Log.i("positionscroll", "onScrolled:${userAdapter.getVariableValue()} ")
-                    Log.i("positionscroll1", "limit:${limit} ")
                     // make API call to get the next set of users
                     if (userAdapter.getVariableValue()==limit){
+                        Extensions.showToast("load more",requireContext())
                  apiCall()
                     }
                 }

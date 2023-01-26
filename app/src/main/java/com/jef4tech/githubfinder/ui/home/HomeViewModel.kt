@@ -17,17 +17,18 @@ class HomeViewModel : ViewModel() {
     }
     val text: LiveData<String> = _text
 
-    val loading = MutableLiveData<Boolean>()
+    val loader = MutableLiveData<Boolean>()
     val errorMessage = MutableLiveData<String>()
     val userList = MutableLiveData<UserResponse>()
 
     fun getUserList(searchWord: String, page: Int) {
+        loader.value = true
         viewModelScope.launch {
             val response = RestApiImpl.getUserList(searchWord,page)
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     userList.postValue(response.body())
-                    loading.value = false
+                    loader.value = false
                 } else {
                     onError("Error ${response.message()}")
                 }
@@ -36,6 +37,6 @@ class HomeViewModel : ViewModel() {
     }
     private fun onError(message: String) {
         errorMessage.value = message
-        loading.value = false
+        loader.value = false
     }
 }
