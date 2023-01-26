@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:text="RepoName"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/tv_stars"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,8 +35,7 @@
         android:layout_height="wrap_content"
         android:text="0 Stars"
         android:textColor="@color/black"
+        android:layout_marginBottom="@dimen/_10sdp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/tv_forks"
-        app:layout_constraintTop_toBottomOf="@+id/tv_repo_name"
-        app:layout_constraintVertical_bias="0.9" />
+        app:layout_constraintStart_toStartOf="@+id/tv_forks" />
 </androidx.constraintlayout.widget.ConstraintLayout>

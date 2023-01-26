@@ -36,10 +36,20 @@ class UserAdapter(private val listener: (user: UserResponse.Item) -> Unit): Recy
         return listData.size
     }
 
-    fun setData(newListData: List<UserResponse.Item>){
+    fun setData(newListData: List<UserResponse.Item>, isLoading: Boolean){
         if (newListData == null) return
+        if (!isLoading){
         listData.clear()
+        }
         listData.addAll(newListData)
+        notifyDataSetChanged()
+    }
+    fun getVariableValue() : Int {
+        return listData.size
+    }
+
+    fun clearAllData(){
+        listData.clear()
         notifyDataSetChanged()
     }
 }

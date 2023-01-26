@@ -17,7 +17,10 @@ interface RestApis {
 
 
     @GET("search/users")
-    suspend fun searchUser(@Query("q") query_parameter: String): Response<UserResponse>
+    suspend fun searchUser(@Query("q") query_parameter: String,
+                           @Query("per_page") per_page: Int,
+                           @Query("page") page: Int
+                           ): Response<UserResponse>
 
     @GET("users/{userid}")
     suspend fun getUserData(@Path("userid") id: String): Response<UserData>
