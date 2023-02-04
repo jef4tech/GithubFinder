@@ -9,7 +9,7 @@ data class UserResponse(
     @SerializedName("incomplete_results")
     val incompleteResults: Boolean,
     @SerializedName("items")
-    val items: List<Item>,
+    val items: MutableList<Item>,
     @SerializedName("total_count")
     val totalCount: Int
 ) {

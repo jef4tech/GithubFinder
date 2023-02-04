@@ -20,14 +20,19 @@ class HomeViewModel : ViewModel() {
     val loader = MutableLiveData<Boolean>()
     val errorMessage = MutableLiveData<String>()
     val userList = MutableLiveData<UserResponse>()
+    var userListPage = 1
+    var limit = 10
+    var isSearched = false
+    var userListResponse:UserResponse?=null
 
-    fun getUserList(searchWord: String, page: Int) {
+    fun getUserList(searchWord: String) {
         loader.value = true
         viewModelScope.launch {
-            val response = RestApiImpl.getUserList(searchWord,page)
+            val response = RestApiImpl.getUserList(searchWord,userListPage)
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     userList.postValue(response.body())
+                    userList.postValue(handleUserListResponse(response.body()))
                     loader.value = false
                 } else {
                     onError("Error ${response.message()}")
@@ -35,6 +40,22 @@ class HomeViewModel : ViewModel() {
             }
         }
     }
+
+    private fun handleUserListResponse(body: UserResponse?): UserResponse? {
+        body?.let {
+            userResponse ->
+            userListPage++
+            if(userListResponse == null || !isSearched) {
+                userListResponse = userResponse
+            } else {
+                val oldlist = userListResponse?.items
+                val newlist = userResponse.items
+                oldlist?.addAll(newlist)
+            }
+        }
+        return userListResponse
+    }
+
     private fun onError(message: String) {
         errorMessage.value = message
         loader.value = false

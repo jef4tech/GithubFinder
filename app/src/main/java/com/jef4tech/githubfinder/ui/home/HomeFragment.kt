@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AbsListView
 import android.widget.SearchView
 import android.widget.SearchView.OnCloseListener
 import androidx.fragment.app.Fragment
@@ -17,17 +18,18 @@ import com.jef4tech.githubfinder.adapters.UserAdapter
 import com.jef4tech.githubfinder.databinding.FragmentHomeBinding
 import com.jef4tech.githubfinder.models.UserResponse
 import com.jef4tech.githubfinder.utils.Extensions
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private lateinit var userAdapter: UserAdapter
-    private var page = 1
-    private  var searchKeyword =""
-    private var isLoading = false
-    private var limit = 10
+    private var searchKeyword =""
     private lateinit  var homeViewModel:HomeViewModel
-
+    val QUERY_PAGE_SIZE = 20
 
 
     // This property is only valid between onCreateView and
@@ -44,11 +46,13 @@ class HomeFragment : Fragment() {
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
-//        homeViewModel.getUserList()
         homeViewModel.userList.observe(viewLifecycleOwner) {
-            userAdapter.setData(it.items,isLoading)
+            userAdapter.differ.submitList(it.items)
+            userAdapter.notifyDataSetChanged()
             Log.i("important", "onCreateView: $it")
         }
+
+        var job: Job? = null
         //search listener
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
@@ -57,57 +61,33 @@ class HomeFragment : Fragment() {
             }
 
             override fun onQueryTextChange(searchWord: String?): Boolean {
-                searchKeyword=searchWord!!
-                isLoading = false
-                page = 1
-                homeViewModel.getUserList(searchWord!!,1)
+                job?.cancel()
+                job = MainScope().launch {
+                    delay(500L)
+                    searchKeyword=searchWord!!
+                    homeViewModel.apply {
+                        isSearched = false
+                        userListPage = 1
+                        getUserList(searchWord)
+                    }
+                }
                 return true
             }
         })
-        binding.searchView.setOnCloseListener(object :OnCloseListener,
-            androidx.appcompat.widget.SearchView.OnCloseListener {
 
-            override fun onClose(): Boolean {
-                // Clear the query text
-            binding.searchView.setQuery("", false)
-                // Clear the focus from the SearchView
-            binding.searchView.clearFocus()
-             userAdapter.clearAllData()
-                return true
-            }
-        })
         setupRecyclerView()
         return root
     }
 
-    private fun setupRecyclerView()=binding.userRecyclerView.apply {
+
+
+    private fun setupRecyclerView(){
         userAdapter= UserAdapter{position -> onClick(position)}
-        adapter=userAdapter
-        layoutManager= LinearLayoutManager(context)
-        addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val visibleItemCount = (layoutManager as LinearLayoutManager).childCount
-                val totalItemCount = (layoutManager as LinearLayoutManager).itemCount
-                val firstVisibleItemPosition = (layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-
-                if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
-                    && firstVisibleItemPosition >= 0) {
-                    // make API call to get the next set of users
-                    if (userAdapter.getVariableValue()==limit){
-                        Extensions.showToast("load more",requireContext())
-                 apiCall()
-                    }
-                }
-            }
-        })
-    }
-
-    private fun apiCall() {
-        page++
-        limit += 10
-        isLoading = true
-        Log.i("scrolling end", "onScrolled: $page")
-        homeViewModel.getUserList(searchKeyword, page)
+        binding.userRecyclerView.apply {
+            adapter=userAdapter
+            layoutManager= LinearLayoutManager(context)
+            addOnScrollListener(this@HomeFragment.scrollListener)
+        }
     }
 
     private fun onClick(position: UserResponse.Item) {
@@ -118,9 +98,49 @@ class HomeFragment : Fragment() {
     }
 
 
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+    var is_Loading = true
+    var isLastPage = false
+    var isScrolling = false
+
+    val scrollListener = object : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+
+            val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+            val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+            val visibleItemCount = layoutManager.childCount
+            val totalItemCount = layoutManager.itemCount
+
+            val isNotLoadingAndNotLastPage = !is_Loading && !isLastPage
+            val isAtLastItem = firstVisibleItemPosition + visibleItemCount >= totalItemCount
+            val isNotAtBeginning = firstVisibleItemPosition >= 0
+//            val isTotalMoreThanVisible = totalItemCount >= QUERY_PAGE_SIZE
+//            val shouldPaginate = isNotLoadingAndNotLastPage && isAtLastItem && isNotAtBeginning &&
+//                    isTotalMoreThanVisible && isScrolling
+            if(isAtLastItem) {
+                val userListSize = homeViewModel.userList.value?.items?.size
+                if (userListSize==homeViewModel.limit){
+                    homeViewModel.limit +=10
+                    Extensions.showToast("Load more",context!!)
+                    homeViewModel.apply {
+                    getUserList(searchKeyword)
+                    isSearched = true
+                }
+                isScrolling = false
+            }
+            }
+            }
+
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            super.onScrollStateChanged(recyclerView, newState)
+            if(newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                isScrolling = true
+            }
+        }
+    }
+
 }

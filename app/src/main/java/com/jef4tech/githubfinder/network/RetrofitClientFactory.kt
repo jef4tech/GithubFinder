@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit
 object RetrofitClientFactory {
 
     val BASE_URL = "https://api.github.com/"
-    val API_KEY = "Bearer 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"
+    val API_KEY = ""
 
 
 
@@ -42,8 +42,8 @@ object RetrofitClientFactory {
             request = if (BaseApplication.instance.let { hasNetwork(it) }!!)
                 request.newBuilder().header("Cache-Control", "public, max-age=" + 5)  .addHeader("Authorization", API_KEY).build()
             else
-                request.newBuilder().header("Cache-Control", "public, only-if-cached, max-stale=" + 60 * 60 * 24 * 7)  .addHeader("Userid", "10034")
-                    .addHeader("Securitykey", "Fb47Gi").build()
+                request.newBuilder().header("Cache-Control", "public, only-if-cached, max-stale=" + 60 * 60 * 24 * 7)
+                    .build()
 
             chain.proceed(request)
         }
