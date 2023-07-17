@@ -1,5 +1,6 @@
 package com.jef4tech.githubfinder.adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -36,6 +37,7 @@ class RepoAdapter(private val listener: (repo: RepositoryResponse.RepositoryResp
             listener.invoke(repo)
         }
     }
+
     fun setData(newListData: List<RepositoryResponse.RepositoryResponseItem>){
         if (newListData == null) return
         listData.clear()

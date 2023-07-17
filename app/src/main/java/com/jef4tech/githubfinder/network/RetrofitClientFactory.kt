@@ -1,10 +1,13 @@
 package com.jef4tech.githubfinder.network
 
 import com.jef4tech.githubfinder.BaseApplication
-import com.jef4tech.githubfinder.BuildConfig
+
 import com.jef4tech.githubfinder.utils.Extensions.hasNetwork
 import okhttp3.Cache
 import okhttp3.OkHttpClient
+import com.jef4tech.githubfinder.BuildConfig
+import com.jef4tech.githubfinder.ui.Constants.API_KEY
+import com.jef4tech.githubfinder.ui.Constants.BASE_URL
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.logging.HttpLoggingInterceptor.Level
 import retrofit2.Retrofit
@@ -17,11 +20,6 @@ import java.util.concurrent.TimeUnit
  * @date 23/01/23
  */
 object RetrofitClientFactory {
-
-    val BASE_URL = "https://api.github.com/"
-    val API_KEY = ""
-
-
 
     val retrofitClient: Retrofit.Builder by lazy {
         val cacheSize = 50 * 1024
